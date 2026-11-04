@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Famille BONNOT-Grenoble</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{
+  --papier:#f5efe3; --papier2:#ece3d2; --carte:#fffdf8; --encre:#2a241e; --encre2:#5e554b; --trait:#d6c9b2;
+  --accent:#8a5a2b; --accent2:#b5803f; --alerte:#9a4a12; --alerte-bg:#fbeedd; --ombre:0 1px 2px rgba(60,40,20,.08),0 4px 14px rgba(60,40,20,.08);
+  --rayon:10px; --titre:"Cormorant Garamond",Georgia,serif; --texte:"Source Sans 3",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --papier:#1d1a16; --papier2:#26221d; --carte:#2b2621; --encre:#efe7da; --encre2:#b9ad9c; --trait:#4a4239;
+  --accent:#d39b5c; --accent2:#e0b37c; --alerte:#f0a868; --alerte-bg:#3a2a1b; --ombre:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+}}
+:root[data-theme="dark"]{
+  --papier:#1d1a16; --papier2:#26221d; --carte:#2b2621; --encre:#efe7da; --encre2:#b9ad9c; --trait:#4a4239;
+  --accent:#d39b5c; --accent2:#e0b37c; --alerte:#f0a868; --alerte-bg:#3a2a1b; --ombre:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--papier);color:var(--encre);font-family:var(--texte);font-size:16px;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--titre);font-weight:600;line-height:1.15;margin:0}
+.cache{display:none!important}
+
+/* ---------- verrou ---------- */
+#verrou{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;
+  background:radial-gradient(ellipse at top,var(--papier2),var(--papier))}
+.verrou-boite{width:100%;max-width:420px;background:var(--carte);border:1px solid var(--trait);border-radius:16px;padding:32px 28px;box-shadow:var(--ombre);text-align:center}
+.verrou-boite h1{font-size:2.3rem;color:var(--accent)}
+.verrou-boite p{color:var(--encre2);margin:.6rem 0 1.4rem}
+.verrou-boite input[type=password]{width:100%;padding:12px 14px;border:1px solid var(--trait);border-radius:8px;background:var(--papier);color:var(--encre);font-size:1rem}
+.verrou-boite label{display:flex;gap:8px;align-items:center;justify-content:center;margin:12px 0;color:var(--encre2);font-size:.92rem}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:10px 18px;font-weight:600}
+.btn.leger{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.6;cursor:wait}
+#verrou-msg{min-height:1.4em;color:var(--alerte);font-size:.92rem;margin-top:10px}
+.blason{width:64px;height:64px;margin:0 auto 10px;display:block}
+
+/* ---------- entête ---------- */
+header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--papier) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--trait)}
+.barre{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 16px;flex-wrap:wrap}
+.barre h1{font-size:1.55rem;color:var(--accent);white-space:nowrap;cursor:pointer}
+nav{display:flex;gap:2px;flex-wrap:wrap}
+nav button{border:0;background:transparent;padding:7px 11px;border-radius:7px;color:var(--encre2);font-weight:500}
+nav button[aria-current="page"]{background:var(--papier2);color:var(--encre)}
+nav button:hover{color:var(--encre)}
+.recherche{margin-left:auto;position:relative}
+.recherche input{width:230px;max-width:60vw;padding:8px 12px;border:1px solid var(--trait);border-radius:8px;background:var(--carte);color:var(--encre)}
+#suggestions{position:absolute;right:0;top:100%;margin-top:4px;width:300px;max-width:90vw;background:var(--carte);border:1px solid var(--trait);border-radius:8px;box-shadow:var(--ombre);max-height:60vh;overflow:auto;z-index:60}
+#suggestions button{display:block;width:100%;text-align:left;border:0;background:none;padding:8px 12px;border-bottom:1px solid var(--trait)}
+#suggestions button:hover,#suggestions button.actif{background:var(--papier2)}
+main{max-width:1400px;margin:0 auto;padding:18px 16px 60px}
+.vue{animation:fondu .2s ease}
+@keyframes fondu{from{opacity:0}to{opacity:1}}
+
+/* ---------- accueil ---------- */
+.hero{display:grid;gap:22px;grid-template-columns:1.3fr 1fr;align-items:start}
+.hero h2{font-size:2.4rem}
+.hero p{color:var(--encre2)}
+.lignees{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:18px}
+.lignee{background:var(--carte);border:1px solid var(--trait);border-left:6px solid var(--c);border-radius:var(--rayon);padding:12px 14px;text-align:left}
+.lignee b{font-family:var(--titre);font-size:1.3rem;display:block}
+.lignee small{color:var(--encre2)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--trait);background:var(--carte);border-radius:999px;padding:4px 11px;font-size:.92rem;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{border-color:var(--accent)}
+.chip i{width:9px;height:9px;border-radius:50%;background:var(--c,#999);display:inline-block}
+.chip[aria-pressed="true"]{background:var(--encre);color:var(--papier);border-color:var(--encre)}
+.encart{background:var(--carte);border:1px solid var(--trait);border-radius:var(--rayon);padding:16px 18px;box-shadow:var(--ombre)}
+.encart h3{font-size:1.35rem;margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.stats div{background:var(--papier2);border-radius:8px;padding:10px;text-align:center}
+.stats b{font-family:var(--titre);font-size:1.8rem;display:block;color:var(--accent)}
+
+/* ---------- arbre ---------- */
+.arbre-outils{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
+.arbre-outils .chips{flex:1}
+.arbre-cadre{position:relative;overflow:auto;max-height:calc(100vh - 150px);background:var(--carte);border:1px solid var(--trait);border-radius:var(--rayon);box-shadow:var(--ombre);min-height:300px}
+.arbre{position:relative;margin:20px}
+.arbre svg{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.noeud{position:absolute;width:var(--w);height:var(--h);border:1px solid var(--trait);border-left:5px solid var(--c);border-radius:8px;background:var(--papier);padding:6px 9px;text-align:left;display:flex;flex-direction:column;justify-content:center;overflow:hidden;transition:transform .12s, box-shadow .12s}
+.noeud:hover{transform:translateY(-1px);box-shadow:var(--ombre)}
+.noeud .n{font-weight:600;font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.noeud .p{font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.noeud .d{font-size:.76rem;color:var(--encre2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.noeud .ic{position:absolute;right:6px;top:5px;font-size:.7rem;color:var(--encre2)}
+.noeud.focus{background:var(--carte);box-shadow:0 0 0 2px var(--accent)}
+.noeud.vide{border-style:dashed;border-left-width:1px;color:var(--encre2);background:transparent;cursor:default}
+.noeud.vide:hover{transform:none;box-shadow:none}
+.gen-titres{display:flex;gap:0;margin:0 20px;font-size:.78rem;color:var(--encre2);text-transform:uppercase;letter-spacing:.05em}
+.legende-arbre{font-size:.85rem;color:var(--encre2);margin-top:8px}
+
+/* ---------- fiche ---------- */
+#fiche{position:fixed;top:0;right:0;bottom:0;width:min(560px,100vw);background:var(--carte);border-left:1px solid var(--trait);box-shadow:-8px 0 30px rgba(0,0,0,.15);z-index:80;overflow:auto;transform:translateX(105%);transition:transform .22s ease}
+#fiche.ouverte{transform:none}
+.fiche-tete{position:sticky;top:0;background:var(--carte);border-bottom:1px solid var(--trait);padding:16px 18px 12px;border-top:6px solid var(--c);z-index:2}
+.fiche-tete h2{font-size:1.9rem}
+.fiche-tete .sous{color:var(--encre2)}
+.fermer{position:absolute;right:10px;top:10px;border:0;background:var(--papier2);width:34px;height:34px;border-radius:50%;font-size:1.1rem}
+.fiche-corps{padding:6px 18px 40px}
+.fiche-corps section{margin-top:18px}
+.fiche-corps h3{font-size:1.2rem;color:var(--accent);margin-bottom:6px;border-bottom:1px solid var(--trait);padding-bottom:3px}
+.faits{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:.95rem}
+.faits dt{color:var(--encre2)}
+.faits dd{margin:0}
+.lien-p{border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;text-underline-offset:2px;text-align:left}
+.lien-lieu{border:0;background:none;padding:0;color:inherit;border-bottom:1px dotted var(--encre2)}
+.alerte{background:var(--alerte-bg);border-left:4px solid var(--alerte);border-radius:6px;padding:8px 10px;margin:6px 0;font-size:.92rem}
+.alerte b{color:var(--alerte)}
+.note{color:var(--encre2);font-size:.88rem}
+.vivant{display:inline-block;font-size:.75rem;background:var(--papier2);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.galerie{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.vign{border:1px solid var(--trait);background:var(--papier2);border-radius:6px;padding:0;overflow:hidden;text-align:left;display:flex;flex-direction:column}
+.vign .img{aspect-ratio:3/4;width:100%;background:var(--papier2) center/cover no-repeat}
+.vign span{font-size:.75rem;padding:4px 6px;line-height:1.25;color:var(--encre2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.frise{list-style:none;padding:0;margin:0;border-left:2px solid var(--trait)}
+.frise li{position:relative;padding:3px 0 7px 14px}
+.frise li::before{content:"";position:absolute;left:-6px;top:10px;width:10px;height:10px;border-radius:50%;background:var(--carte);border:2px solid var(--accent)}
+.frise .dt{font-weight:600;font-size:.9rem;display:block}
+#voile{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:70}
+
+/* ---------- listes ---------- */
+.grille-p{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:14px}
+.carte-p{background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--c);border-radius:8px;padding:10px 12px;text-align:left}
+.carte-p b{display:block}
+.carte-p small{color:var(--encre2)}
+.groupe-titre{font-size:1.5rem;margin:24px 0 2px}
+.chrono{list-style:none;padding:0;margin:14px 0 0}
+.chrono li{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--trait)}
+.chrono .an{font-family:var(--titre);font-size:1.15rem;font-weight:600;color:var(--accent)}
+.chrono .siecle{grid-column:1/-1;font-family:var(--titre);font-size:1.6rem;padding-top:18px;border:0;color:var(--encre)}
+#carte{height:calc(100vh - 200px);min-height:420px;border-radius:var(--rayon);border:1px solid var(--trait);z-index:1}
+.leaflet-popup-content{font-family:var(--texte);font-size:.9rem;max-height:300px;overflow:auto}
+.leaflet-popup-content b{font-family:var(--titre);font-size:1.15rem}
+.pastille{background:var(--accent);color:#fff;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:14px}
+.album .vign .img{aspect-ratio:3/4}
+.album .vign b{font-family:var(--titre);font-size:1.05rem;padding:6px 8px 0;display:block}
+
+/* ---------- visionneuse ---------- */
+#visio{position:fixed;inset:0;background:rgb(15,12,10);z-index:100;display:flex;flex-direction:column;color:#eee}
+#visio .haut{display:flex;align-items:center;gap:10px;padding:10px 14px}
+#visio .haut .t{flex:1;font-size:.95rem}
+#visio .haut button{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:6px;padding:7px 11px}
+#visio .scene{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;position:relative;touch-action:pan-x pan-y pinch-zoom}
+#visio img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in}
+#visio.zoom .scene{display:block}
+#visio.zoom img{max-width:none;max-height:none;cursor:zoom-out}
+#visio .bas{padding:10px 16px 16px;font-size:.92rem;max-height:30vh;overflow:auto;background:rgba(0,0,0,.35)}
+#visio .bas .chips .chip{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)}
+#visio .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:0;color:#fff;width:44px;height:64px;border-radius:8px;font-size:1.6rem}
+#visio .nav.g{left:10px} #visio .nav.d{right:10px}
+#visio.zoom .nav{position:fixed}
+.charge{color:#bbb;padding:40px}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr}
+  .hero h2{font-size:1.9rem}
+  .barre h1{font-size:1.3rem}
+  header{position:static}
+  .recherche{margin-left:0;width:100%}
+  .recherche input{width:100%;max-width:none}
+  #suggestions{left:0;right:auto;width:100%}
+  .chrono li{grid-template-columns:96px 1fr}
+  .faits{grid-template-columns:92px 1fr}
+  .stats b{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+
+<div id="verrou">
+  <form class="verrou-boite" id="verrou-form" autocomplete="off">
+    <svg class="blason" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" style="color:var(--accent)"><path d="M32 58V30"/><path d="M32 40c-8 0-14-4-16-10M32 34c8 0 14-4 16-10M32 30c0-8-3-14-8-18M32 30c0-8 3-14 8-18"/><circle cx="16" cy="28" r="5"/><circle cx="48" cy="22" r="5"/><circle cx="24" cy="10" r="5"/><circle cx="40" cy="10" r="5"/><path d="M22 58h20"/></g></svg>
+    <h1>Famille BONNOT-Grenoble</h1>
+    <p>Arbre, histoire, actes et photos de famille.<br>Site réservé à la famille.</p>
+    <input type="password" id="mdp" placeholder="Mot de passe familial" aria-label="Mot de passe familial" required>
+    <label><input type="checkbox" id="souvenir"> Se souvenir sur cet appareil</label>
+    <button class="btn" id="ouvrir" type="submit">Ouvrir</button>
+    <div id="verrou-msg" role="alert"></div>
+  </form>
+</div>
+
+<div id="app" class="cache">
+  <header>
+    <div class="barre">
+      <h1 id="logo" title="Accueil">Famille BONNOT-Grenoble</h1>
+      <nav id="nav">
+        <button data-vue="accueil">Accueil</button>
+        <button data-vue="arbre">Arbre</button>
+        <button data-vue="personnes">Personnes</button>
+        <button data-vue="carte">Carte</button>
+        <button data-vue="chronologie">Chronologie</button>
+        <button data-vue="album">Album</button>
+        <button data-vue="sources">Sources</button>
+      </nav>
+      <div class="recherche">
+        <input id="q" type="search" placeholder="Rechercher un nom, un lieu…" aria-label="Rechercher">
+        <div id="suggestions" class="cache"></div>
+      </div>
+    </div>
+  </header>
+  <main id="main"></main>
+</div>
+
+<div id="voile" class="cache"></div>
+<aside id="fiche" aria-hidden="true"></aside>
+<div id="visio" class="cache" role="dialog" aria-modal="true"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+"use strict";
+/* ================= Chiffrement ================= */
+const te = new TextEncoder(), td = new TextDecoder();
+const hex2buf = h => new Uint8Array(h.match(/../g).map(x => parseInt(x, 16)));
+const b64 = u8 => btoa(String.fromCharCode(...u8));
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+let CLES = null;   // {enc: CryptoKey, mac: CryptoKey}
+
+async function clesDepuisBrut(brut) {
+  const enc = await crypto.subtle.importKey("raw", brut.slice(0, 32), "AES-CBC", false, ["decrypt"]);
+  const mac = await crypto.subtle.importKey("raw", brut.slice(32, 64), {name: "HMAC", hash: "SHA-256"}, false, ["verify"]);
+  return {enc, mac};
+}
+async function deriver(mdp, meta) {
+  const base = await crypto.subtle.importKey("raw", te.encode(mdp), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({name: "PBKDF2", hash: "SHA-256", salt: hex2buf(meta.sel), iterations: meta.iterations}, base, 512);
+  return new Uint8Array(bits);
+}
+async function dechiffrer(buf) {
+  const u = new Uint8Array(buf);
+  const iv = u.slice(0, 16), ct = u.slice(16, u.length - 32), tag = u.slice(u.length - 32);
+  const ok = await crypto.subtle.verify("HMAC", CLES.mac, tag, u.slice(0, u.length - 32));
+  if (!ok) throw new Error("mac");
+  return new Uint8Array(await crypto.subtle.decrypt({name: "AES-CBC", iv}, CLES.enc, ct));
+}
+async function charger(nom) {
+  const r = await fetch("d/" + nom, {cache: "force-cache"});
+  if (!r.ok) throw new Error("réseau " + r.status);
+  return dechiffrer(await r.arrayBuffer());
+}
+const URLS = new Map(); const ATTENTE = new Map(); let actifs = 0; const file = [];
+function imageUrl(id, vignette) {
+  const k = id + (vignette ? "t" : "");
+  if (URLS.has(k)) return Promise.resolve(URLS.get(k));
+  if (ATTENTE.has(k)) return ATTENTE.get(k);
+  const p = new Promise((res, rej) => { file.push({k, res, rej}); pomper(); });
+  ATTENTE.set(k, p);
+  return p;
+}
+function pomper() {
+  while (actifs < 6 && file.length) {
+    const {k, res, rej} = file.shift(); actifs++;
+    charger(k + ".bin").then(u => { const url = URL.createObjectURL(new Blob([u], {type: "image/jpeg"})); URLS.set(k, url); res(url); })
+      .catch(rej).finally(() => { actifs--; ATTENTE.delete(k); pomper(); });
+  }
+}
+const obs = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const el = e.target; obs.unobserve(el);
+  imageUrl(el.dataset.m, true).then(u => el.style.backgroundImage = `url("${u}")`).catch(() => {});
+}), {rootMargin: "300px"});
+
+/* ================= Verrou ================= */
+const stock = {
+  get(k) { try { return sessionStorage.getItem(k) || localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v, dur) { try { (dur ? localStorage : sessionStorage).setItem(k, v); } catch (e) {} },
+  del(k) { try { sessionStorage.removeItem(k); localStorage.removeItem(k); } catch (e) {} }
+};
+let META = null, D = null;
+async function demarrer() {
+  if (!window.crypto || !crypto.subtle) { msg("Ce navigateur ne permet pas le déchiffrement (une connexion https est nécessaire)."); return; }
+  try { META = await (await fetch("d/cle.json", {cache: "no-cache"})).json(); } catch (e) { msg("Impossible de charger le site."); return; }
+  const memo = stock.get("bonnot-cle-" + META.sel);
+  if (memo) {
+    try { CLES = await clesDepuisBrut(unb64(memo)); await ouvrirDonnees(); return; } catch (e) { stock.del("bonnot-cle-" + META.sel); CLES = null; }
+  }
+  document.getElementById("mdp").focus();
+}
+function msg(t) { document.getElementById("verrou-msg").textContent = t; }
+document.getElementById("verrou-form").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const b = document.getElementById("ouvrir"); b.disabled = true; msg("Ouverture…");
+  try {
+    const brut = await deriver(document.getElementById("mdp").value, META);
+    CLES = await clesDepuisBrut(brut);
+    await ouvrirDonnees();
+    stock.set("bonnot-cle-" + META.sel, b64(brut), document.getElementById("souvenir").checked);
+  } catch (e) { CLES = null; msg(e.message === "mac" ? "Mot de passe incorrect." : "Erreur : " + e.message); }
+  b.disabled = false;
+});
+async function ouvrirDonnees() {
+  D = JSON.parse(td.decode(await charger("donnees.bin")));
+  preparer();
+  document.getElementById("verrou").classList.add("cache");
+  document.getElementById("app").classList.remove("cache");
+  routeur();
+}
+
+/* ================= Données ================= */
+const P = {}; let ENFANTS = {};
+const MOIS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+function fdate(s) {
+  if (!s) return "";
+  let m;
+  if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})\/(\d{2})$/))) return `${+m[3]}-${+m[4]} ${MOIS[+m[2]-1]} ${m[1]}`;
+  if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/))) return `${+m[3] === 1 ? "1er" : +m[3]} ${MOIS[+m[2]-1]} ${m[1]}`;
+  if ((m = s.match(/^(\d{4})-(\d{2})$/))) return `${MOIS[+m[2]-1]} ${m[1]}`;
+  if ((m = s.match(/^(\d{4})\/(\d{4})$/))) return `${m[1]}-${m[2]}`;
+  return s;
+}
+const annee = s => { const m = (s || "").match(/\d{4}/); return m ? +m[0] : null; };
+function preparer() {
+  D.personnes.forEach(p => P[p.id] = p);
+  ENFANTS = {};
+  D.personnes.forEach(p => [p.pere, p.mere].forEach(x => { if (x) (ENFANTS[x] = ENFANTS[x] || []).push(p.id); }));
+  Object.values(ENFANTS).forEach(l => l.sort((a, b) => (annee(P[a].naissance?.date) || 9999) - (annee(P[b].naissance?.date) || 9999)));
+  D.personnes.forEach(p => (p.conjoints || []).forEach(c => {   // symétrie des unions
+    const o = P[c.id]; if (!o) return; o.conjoints = o.conjoints || [];
+    const r = o.conjoints.find(x => x.id === p.id);
+    if (!r) o.conjoints.push({id: p.id, date: c.date, lieu: c.lieu, note: c.note});
+    else { r.date = r.date || c.date; r.lieu = r.lieu || c.lieu; }
+  }));
+  EVTS = [];
+  D.personnes.forEach(p => {
+    if (p.naissance?.date) EVTS.push({p: p.id, t: "Naissance", ...p.naissance});
+    if (p.deces?.date) EVTS.push({p: p.id, t: "Décès", ...p.deces});
+    (p.evenements || []).forEach(e => EVTS.push({p: p.id, t: "", date: e.date, lieu: e.lieu, texte: e.texte}));
+    (p.conjoints || []).forEach(c => { if (c.date && p.sexe === "M") EVTS.push({p: p.id, p2: c.id, t: "Mariage", date: c.date, lieu: c.lieu, note: c.note}); });
+  });
+  EVTS.forEach(e => e.a = annee(e.date));
+  EVTS.sort((a, b) => (a.a || 0) - (b.a || 0) || (a.date || "").localeCompare(b.date || ""));
+}
+let EVTS = [];
+const nomComplet = p => `${p.prenoms} ${p.nom}`;
+const coul = p => D.lignees[p.lignee]?.couleur || "#777";
+function dates(p) {
+  const n = p.naissance?.date, d = p.deces?.date;
+  if (!n && !d) return p.vivant ? "" : "";
+  const an = x => x ? (annee(x) ? (x.startsWith("avant") ? "av. " : "") + annee(x) : x) : "";
+  return d ? `${an(n) || "?"} – ${an(d)}` : (n ? `${p.vivant ? "né" + (p.sexe === "F" ? "e" : "") + " en " : "° "}${an(n)}` : "");
+}
+const lieuNom = id => D.lieux[id]?.nom || id;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+function fratrie(p) {
+  const s = new Set([...(ENFANTS[p.pere] || []), ...(ENFANTS[p.mere] || [])]);
+  s.delete(p.id); return [...s].sort((a, b) => (annee(P[a].naissance?.date) || 0) - (annee(P[b].naissance?.date) || 0));
+}
+
+/* ================= Routeur ================= */
+const main = document.getElementById("main");
+let ETAT = {vue: "accueil", focus: "andre_bonnot_1935", gens: innerWidth < 700 ? 4 : 5, filtre: null};
+function aller(vue, extra) { Object.assign(ETAT, {vue}, extra || {}); ecrireHash(); routeur(); window.scrollTo(0, 0); }
+function ecrireHash() {
+  const h = ETAT.vue === "arbre" ? `#arbre/${ETAT.focus}` : `#${ETAT.vue}`;
+  if (location.hash !== h) history.pushState(null, "", h);
+}
+window.addEventListener("popstate", () => { lireHash(); routeur(); });
+function lireHash() {
+  const [v, x] = location.hash.slice(1).split("/");
+  if (v) ETAT.vue = v;
+  if (v === "arbre" && x) ETAT.focus = x;
+  if (v === "personne" && x) { ETAT.vue = "arbre"; ETAT.focus = x; ETAT.ficheAuDemarrage = x; }
+}
+function routeur() {
+  if (!D) return;
+  if (!visio.classList.contains("cache")) fermerVisio();
+  fermerFiche();
+  document.querySelectorAll("#nav button").forEach(b => b.setAttribute("aria-current", b.dataset.vue === ETAT.vue ? "page" : "false"));
+  const f = {accueil: vAccueil, arbre: vArbre, personnes: vPersonnes, carte: vCarte, chronologie: vChrono, album: vAlbum, sources: vSources}[ETAT.vue] || vAccueil;
+  main.innerHTML = ""; const div = document.createElement("div"); div.className = "vue"; main.appendChild(div); f(div);
+  if (ETAT.ficheAuDemarrage && P[ETAT.ficheAuDemarrage]) { const x = ETAT.ficheAuDemarrage; ETAT.ficheAuDemarrage = null; setTimeout(() => ouvrirFiche(x), 60); }
+}
+document.getElementById("nav").addEventListener("click", e => { const b = e.target.closest("button"); if (b) aller(b.dataset.vue); });
+document.getElementById("logo").onclick = () => aller("accueil");
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-p]"); if (t && !t.classList.contains("vide")) { e.preventDefault(); ouvrirFiche(t.dataset.p); }
+  const f = e.target.closest("[data-focus]"); if (f) { e.preventDefault(); fermerFiche(); aller("arbre", {focus: f.dataset.focus}); }
+  const l = e.target.closest("[data-lieu]"); if (l) { e.preventDefault(); fermerFiche(); aller("carte", {lieu: l.dataset.lieu}); }
+  const m = e.target.closest("[data-liste]"); if (m) { e.preventDefault(); visionner(JSON.parse(m.dataset.liste), +m.dataset.i); }
+});
+
+/* ================= Vues ================= */
+function chipP(id) { const p = P[id]; return `<button class="chip" data-p="${id}" style="--c:${coul(p)}"><i></i>${esc(nomComplet(p))}<small>${esc(dates(p))}</small></button>`; }
+
+function vAccueil(el) {
+  const anciens = D.personnes.filter(p => !p.vivant).length;
+  const nbDocs = Object.values(D.medias).filter(m => m.type === "acte").length;
+  const amont = ["francois_bonnot_1970", "vincent_bonnot", "michel_bonnot", "jean_pierre_bonnot", "dominique_bonnot_1968"];
+  el.innerHTML = `
+  <div class="hero">
+    <div>
+      <h2>Sur les traces de nos ancêtres</h2>
+      <p>Cinq lignées se rejoignent à Grenoble en 1934, au mariage de <button class="lien-p" data-p="louis_bonnot">Louis BONNOT</button>, venu du Bourbonnais,
+      et de <button class="lien-p" data-p="paulette_guerre">Paulette GUERRE</button>, Grenobloise. Ce site rassemble l'arbre, l'histoire de chacun,
+      les actes retrouvés dans les registres et l'album photo de famille, d'après les recherches menées par André et Bab de 2000 à 2024.</p>
+      <div class="lignees">${Object.entries(D.lignees).filter(([k]) => k !== "allies").map(([k, l]) => `
+        <button class="lignee" style="--c:${l.couleur}" data-focus="${({bonnot: "francois_bonnot", barras: "marie_louise_barras", guerre: "remy_guerre", lille: "jean_louis_lille", bignon: "adelaide_bignon"})[k]}">
+          <b>${esc(l.nom)}</b><small>${esc(l.region)}</small></button>`).join("")}</div>
+      <h3 style="margin:22px 0 8px;font-size:1.3rem">Voir l'arbre à partir de…</h3>
+      <div class="chips">${["andre_bonnot_1935", "pierre_bonnot_1937", ...amont].map(id => `<button class="chip" data-focus="${id}" style="--c:${coul(P[id])}"><i></i>${esc(nomComplet(P[id]))}</button>`).join("")}</div>
+    </div>
+    <div class="encart">
+      <h3>En quelques chiffres</h3>
+      <div class="stats"><div><b>${D.personnes.length}</b>personnes</div><div><b>${nbDocs}</b>actes et documents</div><div><b>${D.album.length}</b>pages d'album</div></div>
+      <p class="note">Le plus ancien ancêtre connu : <button class="lien-p" data-p="jacques_bignon">Jacques BIGNON</button>, à La Grave (Hautes-Alpes), né avant 1590.
+      Côté BONNOT : <button class="lien-p" data-p="francois_bonnot">François BONNOT</button>, né en 1706 à Cressy-sur-Somme.</p>
+      <p class="note">Les informations qui se contredisent d'une source à l'autre sont signalées par <b style="color:var(--alerte)">⚠</b> dans les fiches et regroupées dans « Sources ».</p>
+      <p><button class="btn leger" onclick="verrouiller()">Verrouiller le site</button></p>
+    </div>
+  </div>`;
+}
+
+function vArbre(el) {
+  const p = P[ETAT.focus] || P.andre_bonnot_1935;
+  const W = innerWidth < 700 ? 150 : 190, H = 58, GAPX = innerWidth < 700 ? 26 : 40, SLOT = H + 12;
+  const G = ETAT.gens, lignes = 2 ** (G - 1), hauteur = lignes * SLOT;
+  const enf = ENFANTS[p.id] || [], fr = fratrie(p);
+  el.innerHTML = `
+    <div class="arbre-outils">
+      <div><h2 style="font-size:1.7rem">Ascendance de ${esc(nomComplet(p))}</h2>
+      <div class="note">Cliquez sur une personne pour ouvrir sa fiche ; « ↺ » recentre l'arbre sur elle.</div></div>
+      <label class="note" style="margin-left:auto">Générations
+        <select id="gens">${[3, 4, 5, 6].map(n => `<option ${n === G ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+    </div>
+    ${enf.length ? `<div class="chips" style="margin-bottom:8px"><span class="note">Enfants :</span> ${enf.map(id => `<button class="chip" data-focus="${id}" style="--c:${coul(P[id])}"><i></i>${esc(nomComplet(P[id]))}</button>`).join("")}</div>` : ""}
+    ${fr.length ? `<div class="chips" style="margin-bottom:8px"><span class="note">Frères et sœurs :</span> ${fr.map(id => `<button class="chip" data-focus="${id}" style="--c:${coul(P[id])}"><i></i>${esc(nomComplet(P[id]))}</button>`).join("")}</div>` : ""}
+    <div class="arbre-cadre"><div class="arbre" style="width:${G * (W + GAPX)}px;height:${hauteur}px"><svg width="${G * (W + GAPX)}" height="${hauteur}"></svg></div></div>
+    <div class="legende-arbre chips">${Object.values(D.lignees).map(l => `<span class="chip" style="--c:${l.couleur}"><i></i>${esc(l.nom)}</span>`).join("")}</div>`;
+  el.querySelector("#gens").onchange = e => { ETAT.gens = +e.target.value; routeur(); };
+  const arbre = el.querySelector(".arbre"), svg = arbre.querySelector("svg");
+  let html = "", traits = "";
+  const place = (id, g, i) => {
+    const y = (i + .5) * hauteur / 2 ** g - H / 2, x = g * (W + GAPX);
+    const q = id && P[id];
+    if (q) {
+      const nb = (q.docs || []).length + (q.photos || []).length;
+      html += `<button class="noeud ${g === 0 ? "focus" : ""}" data-p="${id}" style="left:${x}px;top:${y}px;--w:${W}px;--h:${H}px;--c:${coul(q)}">
+        <span class="n">${esc(q.nom)}</span><span class="p">${esc(q.prenoms)}</span><span class="d">${esc(dates(q))}</span>
+        <span class="ic">${(q.alertes || []).length ? "⚠ " : ""}${nb ? "▣ " + nb : ""}</span></button>`;
+      if (g + 1 < G) {
+        [q.pere, q.mere].forEach((par, k) => {
+          const ii = i * 2 + k, y2 = (ii + .5) * hauteur / 2 ** (g + 1), x2 = (g + 1) * (W + GAPX), ym = y + H / 2, xm = x + W + GAPX / 2;
+          traits += `<path d="M${x + W} ${ym} H${xm} V${y2} H${x2}" stroke="var(--trait)" stroke-width="1.5" fill="none" ${par ? "" : 'stroke-dasharray="3 3"'}/>`;
+          place(par, g + 1, ii);
+        });
+      }
+    } else if (g > 0) {
+      html += `<div class="noeud vide" style="left:${x}px;top:${y}px;--w:${W}px;--h:${H}px"><span class="d">non retrouvé</span></div>`;
+    }
+  };
+  place(p.id, 0, 0);
+  arbre.insertAdjacentHTML("beforeend", html); svg.innerHTML = traits;
+  arbre.querySelectorAll(".noeud[data-p]").forEach(n => {
+    if (n.dataset.p === p.id) return;
+    const r = document.createElement("span"); r.textContent = "↺"; r.title = "Recentrer l'arbre"; r.setAttribute("data-focus", n.dataset.p);
+    r.style.cssText = "position:absolute;right:6px;bottom:4px;font-size:.95rem;color:var(--accent);padding:0 3px";
+    n.appendChild(r);
+  });
+  const cadre = el.querySelector(".arbre-cadre");
+  requestAnimationFrame(() => { cadre.scrollTop = Math.max(0, (hauteur + 40 - cadre.clientHeight) / 2); });
+}
+
+function vPersonnes(el) {
+  const f = ETAT.filtre;
+  const liste = D.personnes.filter(p => !f || p.lignee === f).sort((a, b) => (annee(a.naissance?.date) ?? annee(a.deces?.date) ?? 3000) - (annee(b.naissance?.date) ?? annee(b.deces?.date) ?? 3000));
+  el.innerHTML = `<h2 style="font-size:2rem">Les ${liste.length} personnes</h2>
+    <div class="chips" style="margin-top:10px"><button class="chip" aria-pressed="${!f}" data-f="">Toutes</button>${Object.entries(D.lignees).map(([k, l]) => `<button class="chip" aria-pressed="${f === k}" data-f="${k}" style="--c:${l.couleur}"><i></i>${esc(l.nom)}</button>`).join("")}</div>
+    <div class="grille-p">${liste.map(p => `<button class="carte-p" data-p="${p.id}" style="--c:${coul(p)}"><b>${esc(nomComplet(p))}${p.vivant ? '<span class="vivant">vivant</span>' : ""}</b>
+      <small>${esc(dates(p))}${p.naissance?.lieu ? " · " + esc(lieuNom(p.naissance.lieu)) : ""}${(p.metiers || [])[0] ? " · " + esc(p.metiers[0]) : ""}</small></button>`).join("")}</div>`;
+  el.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { ETAT.filtre = b.dataset.f || null; routeur(); });
+}
+
+let carteL = null;
+function vCarte(el) {
+  el.innerHTML = `<h2 style="font-size:2rem;margin-bottom:4px">Les lieux de la famille</h2>
+    <p class="note" style="margin-top:0">Naissances, mariages, décès et lieux de vie. Fond de carte © contributeurs OpenStreetMap.</p><div id="carte"></div>`;
+  if (!window.L) { el.querySelector("#carte").textContent = "La carte n'a pas pu être chargée (connexion internet nécessaire)."; return; }
+  const parLieu = {};
+  const ajout = (l, txt, pid) => { if (!l || !D.lieux[l]) return; (parLieu[l] = parLieu[l] || []).push({txt, pid}); };
+  EVTS.forEach(e => ajout(e.lieu, `${e.t || ""} ${fdate(e.date)}${e.texte ? " — " + e.texte : ""}${e.p2 ? " avec " + nomComplet(P[e.p2]) : ""}`, e.p));
+  D.personnes.forEach(p => (p.lieux_vie || []).forEach(l => ajout(l, "y a vécu", p.id)));
+  carteL = L.map(el.querySelector("#carte"), {scrollWheelZoom: true});
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 18, attribution: "© contributeurs OpenStreetMap"}).addTo(carteL);
+  const pts = [];
+  Object.entries(parLieu).forEach(([id, l]) => {
+    const g = D.lieux[id], n = new Set(l.map(x => x.pid)).size;
+    const ic = L.divIcon({className: "", html: `<div class="pastille" style="width:${22 + Math.min(n, 12) * 1.6}px;height:${22 + Math.min(n, 12) * 1.6}px">${n}</div>`, iconSize: [30, 30]});
+    const parP = {};
+    l.forEach(x => (parP[x.pid] = parP[x.pid] || []).push(x.txt));
+    const mk = L.marker([g.lat, g.lon], {icon: ic}).addTo(carteL).bindPopup(`<b>${esc(g.nom)}</b><div class="note">${esc(g.dep || "")}</div>
+      ${Object.entries(parP).map(([pid, t]) => `<div style="margin-top:6px"><a href="#" data-p="${pid}">${esc(nomComplet(P[pid]))}</a><br><span class="note">${t.map(esc).join("<br>")}</span></div>`).join("")}`);
+    pts.push([g.lat, g.lon]);
+    if (ETAT.lieu === id) setTimeout(() => mk.openPopup(), 300);
+  });
+  if (ETAT.lieu && D.lieux[ETAT.lieu]) carteL.setView([D.lieux[ETAT.lieu].lat, D.lieux[ETAT.lieu].lon], 9);
+  else carteL.fitBounds(pts, {padding: [30, 30]});
+  ETAT.lieu = null;
+}
+
+function vChrono(el) {
+  const f = ETAT.filtre;
+  const l = EVTS.filter(e => e.a && (!f || P[e.p].lignee === f));
+  let s = null, html = "";
+  l.forEach(e => {
+    const sc = Math.floor((e.a - 1) / 100) + 1;
+    if (sc !== s) { s = sc; html += `<li class="siecle">${["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "XVIe", "XVIIe", "XVIIIe", "XIXe", "XXe", "XXIe"][sc] || sc + "e"} siècle</li>`; }
+    const q = P[e.p];
+    html += `<li><span class="an">${esc(fdate(e.date))}</span><span>${e.t ? `<b>${e.t}</b> ` : ""}${e.t === "Mariage" ? "de " : e.t ? "de " : ""}<button class="lien-p" data-p="${e.p}">${esc(nomComplet(q))}</button>
+      ${e.p2 ? ` et <button class="lien-p" data-p="${e.p2}">${esc(nomComplet(P[e.p2]))}</button>` : ""}${e.texte ? " — " + esc(e.texte) : ""}
+      ${e.lieu ? ` · <button class="lien-lieu" data-lieu="${e.lieu}">${esc(lieuNom(e.lieu))}</button>` : ""}${e.note ? `<br><span class="note">${esc(e.note)}</span>` : ""}</span></li>`;
+  });
+  el.innerHTML = `<h2 style="font-size:2rem">Chronologie</h2>
+    <div class="chips" style="margin-top:10px"><button class="chip" aria-pressed="${!f}" data-f="">Toutes les lignées</button>${Object.entries(D.lignees).map(([k, x]) => `<button class="chip" aria-pressed="${f === k}" data-f="${k}" style="--c:${x.couleur}"><i></i>${esc(x.nom)}</button>`).join("")}</div>
+    <ul class="chrono">${html}</ul>`;
+  el.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { ETAT.filtre = b.dataset.f || null; routeur(); });
+}
+
+function vignette(mid, legende, liste, i) {
+  return `<button class="vign" data-m="${mid}" data-liste='${esc(JSON.stringify(liste))}' data-i="${i}"><div class="img" data-m="${mid}"></div><span>${esc(legende)}</span></button>`;
+}
+function observer(el) { el.querySelectorAll(".img[data-m]").forEach(x => obs.observe(x)); }
+
+function vAlbum(el) {
+  const liste = D.album.map(a => ({m: a.media, page: a.page}));
+  el.innerHTML = `<h2 style="font-size:2rem">L'album de famille</h2><p class="note">Pages de l'album annoté par André BONNOT, avec la transcription des légendes manuscrites.</p>
+    <div class="album">${D.album.map((a, i) => `<button class="vign" data-m="${a.media}" data-liste='${esc(JSON.stringify(liste))}' data-i="${i}">
+      <div class="img" data-m="${a.media}"></div><b>${esc(a.titre)}</b><span>Page ${a.page}</span></button>`).join("")}</div>`;
+  observer(el);
+}
+
+function vSources(el) {
+  const alertes = D.personnes.filter(p => (p.alertes || []).length);
+  const incert = D.personnes.filter(p => (p.sources || []).some(s => /vérifier|difficile|incertain/.test(s)));
+  el.innerHTML = `<h2 style="font-size:2rem">Sources et méthode</h2>
+    <div class="encart" style="margin-top:12px"><h3>Les recherches</h3><p>${esc(D.intro)}</p>
+    <p class="note">Abréviations de la chronologie : SS Saint-Seine, CR Cressy-sur-Somme, IS Issy-l'Évêque, M Moulins, B Bessay-sur-Allier, SJ Saint-Justin, SE Sembouès,
+    LG La Grave, EDG Entre-deux-Guiers, SJB Saint-Jean-de-Bournay, LP La Pierre, GR Grenoble, LT La Tronche. Les cotes « page » renvoient aux registres numérisés des archives.</p></div>
+    ${D.generaux.map(g => `<h3 class="groupe-titre">${esc(g.groupe)}</h3><div class="galerie">${g.medias.map((m, i) => vignette(m, D.medias[m].titre || D.medias[m].cote, g.medias.map(x => ({m: x})), i)).join("")}</div>`).join("")}
+    <h3 class="groupe-titre">⚠ Informations divergentes (${alertes.reduce((n, p) => n + p.alertes.length, 0)})</h3>
+    <p class="note">Rien n'a été tranché : la fiche affiche la valeur de la chronologie (liée à l'acte numérisé) et signale l'autre version.</p>
+    ${alertes.map(p => p.alertes.map(a => `<div class="alerte"><button class="lien-p" data-p="${p.id}">${esc(nomComplet(p))}</button> — ${esc(a)}</div>`).join("")).join("")}
+    ${incert.length ? `<h3 class="groupe-titre">Lectures à vérifier</h3>${incert.map(p => `<div class="alerte"><button class="lien-p" data-p="${p.id}">${esc(nomComplet(p))}</button> — ${esc(p.sources.join(" ; "))}</div>`).join("")}` : ""}
+    <div class="encart" style="margin-top:22px"><h3>Sources extérieures utilisées</h3>
+    <ul><li>Coordonnées des communes et fond de carte : OpenStreetMap (Nominatim).</li>
+    <li>Capture d'un arbre en ligne (document 90-0) pour Jacques BIGNON, la famille ARTHAUD et les frères de Barthélemy BIGNON — source non officielle.</li></ul>
+    <p class="note">Documents mentionnés dans la chronologie mais absents du dossier numérisé : 61-9, 61-10, 61-13, 61-14, 61-24, 80-5, 90-5, 95-01 à 95-04, 95-11, 95-14 à 95-16.</p></div>`;
+  observer(el);
+}
+
+/* ================= Fiche ================= */
+const fiche = document.getElementById("fiche"), voile = document.getElementById("voile");
+function ouvrirFiche(id) {
+  const p = P[id]; if (!p) return;
+  const lien = x => x && P[x] ? `<button class="lien-p" data-p="${x}">${esc(nomComplet(P[x]))}</button> <span class="note">${esc(dates(P[x]))}</span>` : "<span class='note'>non retrouvé</span>";
+  const lieu = l => l ? ` à <button class="lien-lieu" data-lieu="${l}">${esc(lieuNom(l))}</button>` : "";
+  const evt = (e, mot) => e ? `${esc(fdate(e.date) || "")}${lieu(e.lieu)}${e.note ? `<div class="note">${esc(e.note)}</div>` : ""}` : "";
+  const enf = ENFANTS[id] || [], fr = fratrie(p);
+  const docs = (p.docs || []), docListe = docs.map(m => ({m}));
+  const pages = (p.photos || []).map(ph => ({...ph, a: D.album.find(a => a.page === ph.page)})).filter(x => x.a);
+  const phListe = pages.map(x => ({m: x.a.media, page: x.page, note: x.note}));
+  const tousLieux = [...new Set([p.naissance?.lieu, p.deces?.lieu, ...(p.conjoints || []).map(c => c.lieu), ...(p.evenements || []).map(e => e.lieu), ...(p.lieux_vie || [])].filter(Boolean))];
+  fiche.style.setProperty("--c", coul(p));
+  fiche.innerHTML = `<div class="fiche-tete" style="--c:${coul(p)}"><button class="fermer" aria-label="Fermer">✕</button>
+      <div class="note">${esc(D.lignees[p.lignee]?.nom || "")}</div><h2>${esc(p.prenoms)} ${esc(p.nom)}${p.vivant ? '<span class="vivant">vivant</span>' : ""}</h2>
+      <div class="sous">${esc(dates(p))}${(p.metiers || []).length ? " · " + esc(p.metiers.join(", ")) : ""}</div>
+      <div class="chips" style="margin-top:8px"><button class="chip" data-focus="${id}">↺ Voir son arbre</button>${tousLieux.length ? `<button class="chip" data-lieu="${tousLieux[0]}">Carte</button>` : ""}</div></div>
+    <div class="fiche-corps">
+      <section><dl class="faits">
+        ${p.naissance ? `<dt>Naissance</dt><dd>${evt(p.naissance)}</dd>` : ""}
+        ${p.deces ? `<dt>Décès</dt><dd>${evt(p.deces)}</dd>` : ""}
+        <dt>Père</dt><dd>${lien(p.pere)}</dd><dt>Mère</dt><dd>${lien(p.mere)}</dd>
+        ${(p.conjoints || []).map(c => `<dt>${c.date ? "Union" : "Conjoint"}</dt><dd>${lien(c.id)}${c.date ? `<div>${esc(fdate(c.date))}${lieu(c.lieu)}</div>` : ""}${c.note ? `<div class="note">${esc(c.note)}</div>` : ""}</dd>`).join("")}
+      </dl></section>
+      ${(p.alertes || []).map(a => `<div class="alerte"><b>⚠ Sources divergentes :</b> ${esc(a)}</div>`).join("")}
+      ${p.bio ? `<section><h3>Son histoire</h3><p>${esc(p.bio)}</p></section>` : ""}
+      ${(p.evenements || []).length ? `<section><h3>Événements</h3><ul class="frise">${p.evenements.map(e => `<li><span class="dt">${esc(fdate(e.date))}</span>${esc(e.texte)}${lieu(e.lieu)}</li>`).join("")}</ul></section>` : ""}
+      ${enf.length ? `<section><h3>Enfants</h3><div class="chips">${enf.map(chipP).join("")}</div></section>` : ""}
+      ${fr.length ? `<section><h3>Frères et sœurs</h3><div class="chips">${fr.map(chipP).join("")}</div></section>` : ""}
+      ${docs.length ? `<section><h3>Actes et documents (${docs.length})</h3><div class="galerie">${docs.map((m, i) => vignette(m, `${D.medias[m].cote} ${D.medias[m].titre}`, docListe, i)).join("")}</div></section>` : ""}
+      ${pages.length ? `<section><h3>Dans l'album (${pages.length})</h3><div class="galerie">${pages.map((x, i) => vignette(x.a.media, `p. ${x.page} — ${x.note || x.a.titre}`, phListe, i)).join("")}</div></section>` : ""}
+      ${tousLieux.length ? `<section><h3>Lieux</h3><div class="chips">${tousLieux.map(l => `<button class="chip" data-lieu="${l}">${esc(lieuNom(l))}</button>`).join("")}</div></section>` : ""}
+      ${(p.sources || []).length ? `<section><h3>Sources</h3><p class="note">${esc(p.sources.join(" ; "))}</p></section>` : ""}
+    </div>`;
+  fiche.querySelector(".fermer").onclick = fermerFiche;
+  fiche.classList.add("ouverte"); fiche.setAttribute("aria-hidden", "false"); voile.classList.remove("cache");
+  fiche.scrollTop = 0; observer(fiche);
+}
+function fermerFiche() { fiche.classList.remove("ouverte"); fiche.setAttribute("aria-hidden", "true"); voile.classList.add("cache"); }
+voile.onclick = fermerFiche;
+
+/* ================= Visionneuse ================= */
+const visio = document.getElementById("visio"); let VL = [], VI = 0;
+function visionner(liste, i) { VL = liste; VI = i; visio.classList.remove("cache", "zoom"); afficherVisio(); }
+function afficherVisio() {
+  const it = VL[VI], m = D.medias[it.m], a = it.page != null ? D.album.find(x => x.page === it.page) : null;
+  visio.innerHTML = `<div class="haut"><div class="t">${a ? `<b>Album, page ${a.page}</b> — ${esc(a.titre)}` : `<b>${esc(m.cote)}</b> ${esc(m.titre)}`} <span style="opacity:.6">(${VI + 1}/${VL.length})</span></div>
+     <button id="vz">Zoom</button><button id="vf" aria-label="Fermer">✕</button></div>
+     <div class="scene"><div class="charge">Déchiffrement…</div>${VL.length > 1 ? '<button class="nav g" aria-label="Précédente">‹</button><button class="nav d" aria-label="Suivante">›</button>' : ""}</div>
+     ${a ? `<div class="bas">${it.note ? `<div><b>${esc(it.note)}</b></div>` : ""}<div>${esc(a.legende)}</div>${a.personnes.length ? `<div class="chips" style="margin-top:8px">${a.personnes.map(id => `<button class="chip" data-vp="${id}">${esc(nomComplet(P[id]))}</button>`).join("")}</div>` : ""}</div>` : ""}`;
+  imageUrl(it.m, false).then(u => {
+    const sc = visio.querySelector(".scene"); if (!sc) return;
+    const c = sc.querySelector(".charge"); if (c) c.remove();
+    const img = new Image(); img.src = u; img.alt = m.titre || ""; img.onclick = basculerZoom; sc.prepend(img);
+  }).catch(() => { const c = visio.querySelector(".charge"); if (c) c.textContent = "Image indisponible."; });
+  visio.querySelector("#vf").onclick = fermerVisio; visio.querySelector("#vz").onclick = basculerZoom;
+  const g = visio.querySelector(".nav.g"), d = visio.querySelector(".nav.d");
+  if (g) { g.onclick = () => nav(-1); d.onclick = () => nav(1); }
+  visio.querySelectorAll("[data-vp]").forEach(b => b.onclick = () => { fermerVisio(); ouvrirFiche(b.dataset.vp); });
+}
+function basculerZoom() { visio.classList.toggle("zoom"); }
+function nav(k) { VI = (VI + k + VL.length) % VL.length; visio.classList.remove("zoom"); afficherVisio(); }
+function fermerVisio() { visio.classList.add("cache"); visio.innerHTML = ""; }
+document.addEventListener("keydown", e => {
+  if (!visio.classList.contains("cache")) { if (e.key === "Escape") fermerVisio(); if (e.key === "ArrowLeft") nav(-1); if (e.key === "ArrowRight") nav(1); return; }
+  if (e.key === "Escape") fermerFiche();
+});
+let tx = null;
+visio.addEventListener("touchstart", e => { tx = e.touches.length === 1 ? e.touches[0].clientX : null; }, {passive: true});
+visio.addEventListener("touchend", e => { if (tx == null || visio.classList.contains("zoom")) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 60) nav(dx < 0 ? 1 : -1); tx = null; });
+
+/* ================= Recherche ================= */
+const q = document.getElementById("q"), sug = document.getElementById("suggestions");
+const sansAccent = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+q.addEventListener("input", () => {
+  const t = sansAccent(q.value.trim());
+  if (t.length < 2) { sug.classList.add("cache"); return; }
+  const r = D.personnes.filter(p => sansAccent(nomComplet(p) + " " + (p.metiers || []).join(" ")).includes(t)).slice(0, 12);
+  const lx = Object.entries(D.lieux).filter(([, l]) => sansAccent(l.nom).includes(t)).slice(0, 5);
+  sug.innerHTML = r.map(p => `<button data-p="${p.id}"><b>${esc(nomComplet(p))}</b> <span class="note">${esc(dates(p))}</span></button>`).join("")
+    + lx.map(([id, l]) => `<button data-lieu="${id}">📍 ${esc(l.nom)} <span class="note">${esc(l.dep)}</span></button>`).join("") || `<div class="note" style="padding:8px 12px">Aucun résultat</div>`;
+  sug.classList.remove("cache");
+});
+sug.addEventListener("click", () => { sug.classList.add("cache"); q.value = ""; });
+document.addEventListener("click", e => { if (!e.target.closest(".recherche")) sug.classList.add("cache"); });
+
+function verrouiller() { if (META) stock.del("bonnot-cle-" + META.sel); location.hash = ""; location.reload(); }
+lireHash();
+demarrer();
+</script>
+</body>
+</html>
