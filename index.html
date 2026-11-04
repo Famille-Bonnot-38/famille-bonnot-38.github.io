@@ -243,7 +243,9 @@ async function dechiffrer(buf) {
   return new Uint8Array(await crypto.subtle.decrypt({name: "AES-CBC", iv}, CLES.enc, ct));
 }
 async function charger(nom) {
-  const r = await fetch("d/" + nom, {cache: "force-cache"});
+  // ?v=<sel> : le sel change à chaque reconstruction, donc le navigateur ne réutilise jamais
+  // des fichiers chiffrés d'une version précédente (sinon « mot de passe incorrect » après mise à jour)
+  const r = await fetch("d/" + nom + "?v=" + META.sel, {cache: "force-cache"});
   if (!r.ok) throw new Error("réseau " + r.status);
   return dechiffrer(await r.arrayBuffer());
 }
